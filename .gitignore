@@ -9,7 +9,8 @@ dados/entrada/*
 !dados/entrada/.gitkeep
 dados/json/*
 !dados/json/.gitkeep
-logs
+logs/*
+!logs/.gitkeep
 /tmp_home_1002
 venv
 application_default_credentials.json
