@@ -1,5 +1,7 @@
 ### Sobre o Projeto
 
+Automatize buscas de vagas, análise de requisitos e comparação com currículos usando integração com LinkedIn, APIs do Google Vertex, Gemini e fluxo com o n8n.
+
 Este projeto automatiza fluxos de análise de vagas de emprego e avaliação de aderência de currículos utilizando [n8n](https://n8n.io/), scripts shell customizados e integração via Docker.  
 Inclui um workflow n8n (JSON) que executa os scripts para análise de vagas, gera sugestões de melhorias para currículos, calcula score de aderência e orquestra tudo dentro do ambiente Docker.
 
