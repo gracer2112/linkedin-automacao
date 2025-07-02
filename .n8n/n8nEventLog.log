@@ -1,0 +1,2 @@
+{"__type":"$$EventMessageAudit","id":"47803548-d21b-4c1b-a737-db1aa259dbcf","ts":"2025-06-21T17:29:21.377+00:00","eventName":"n8n.audit.user.login.success","message":"n8n.audit.user.login.success","payload":{"userId":"5e4355e4-429c-45ee-af6d-230d60251c47","_email":"ericaaraujo2112@gmail.com","_firstName":"Erica","_lastName":"Araujo","globalRole":"global:owner","authenticationMethod":"email"}}
+{"__type":"$$EventMessageConfirm","confirm":"47803548-d21b-4c1b-a737-db1aa259dbcf","ts":"2025-06-21T17:29:21.379+00:00","source":{"id":"0","name":"eventBus"}}
