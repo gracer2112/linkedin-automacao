@@ -1,7 +1,8 @@
 .env
 .n8n/* 
 !.n8n/.gitkeep
-configs/linkedin.json
+configs/*
+!configs/.gitkeep
 dados/cv
 dados/entrada
 dados/json
