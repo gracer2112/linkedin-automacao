@@ -73,7 +73,7 @@ Exemplo: config.example.json
 }
 
 ```
-```table
+```
 Descrição de cada chave
 Chave	                           Descrição
 keyword	                        Termos e cargos a buscar no LinkedIn
