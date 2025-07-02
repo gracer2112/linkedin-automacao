@@ -1,5 +1,5 @@
 .env
-n8n
+.n8n
 configs/linkedin.json
 dados/cv
 dados/entrada
