@@ -1,0 +1,178 @@
+{
+  "name": "llinkdinworkflow",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "let raw = $json[\"stdout\"];\n\n// 1. Limpa e corrige a string em uma única linha.\n//    - Substitui NaN por null (a correção principal).\n//    - Remove quebras de linha.\n//    - Remove aspas extras no início e no fim da string inteira (se houver).\nconst cleanRaw = raw.replace(/NaN/g, 'null').replace(/\\n/g, '').replace(/^\"|\"$/g, '');\n\n// 2. Faz o parse.\nconst parsedData = JSON.parse(cleanRaw);\n\n// 3. Verifica se o resultado já é um array.\nif (Array.isArray(parsedData)) {\n  // Se já for um array, assume-se que está no formato correto (array de objetos).\n  // E cada objeto do array será um item no n8n\n  return parsedData.map(item => ({ json: item }));\n} else {\n  // Se for um objeto único, cria um array com um único item.\n  return [{\n    json: parsedData\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        20,
+        20
+      ],
+      "id": "c87aade7-6a31-4d02-bb9b-0351040aa008",
+      "name": "transforma o json de saida em algo palatavel pro proximo script"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "=cat /data/linkedin-automacao/output/analise_vagas_resultados.json | . /data/linkedin-automacao/run_cv_otimizado.sh"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -100
+      ],
+      "id": "00218ead-d042-4c0e-ac6a-3b7df8b6d498",
+      "name": "gera sugestoes de melhoria no cv"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "=echo '{{ JSON.stringify($json) }}' | . /data/linkedin-automacao/run_aderencia.sh"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        320,
+        140
+      ],
+      "id": "568a2861-7d56-45e5-b5d8-6ce620711b00",
+      "name": "Le os requisitos de vaga e compara com meu CV, gera um score de aderencia",
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        620,
+        160
+      ],
+      "id": "3a40e5fa-a99f-49fd-a811-eedad3b8856f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        620,
+        -100
+      ],
+      "id": "d5413277-b299-45bb-9fc7-617f027bffa9",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "triggerOn": "folder",
+        "path": "/data/linkedin-automacao/dados/entrada",
+        "events": [
+          "change"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.localFileTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        20
+      ],
+      "id": "fa5b4f3f-9563-41c3-883e-509359d2c6c2",
+      "name": "Local File Trigger"
+    },
+    {
+      "parameters": {
+        "command": ". /data/linkedin-automacao/run_linkedin.sh"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        20
+      ],
+      "id": "2c36bb9e-691f-48b0-a8ea-57c31263082c",
+      "name": "analise_vaga_ia",
+      "notesInFlow": false,
+      "disabled": true,
+      "notes": "Le as vagas capturadas no linkedin e gera um json de requisitos de vaga"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "transforma o json de saida em algo palatavel pro proximo script": {
+      "main": [
+        [
+          {
+            "node": "gera sugestoes de melhoria no cv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Le os requisitos de vaga e compara com meu CV, gera um score de aderencia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Le os requisitos de vaga e compara com meu CV, gera um score de aderencia": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gera sugestoes de melhoria no cv": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Local File Trigger": {
+      "main": [
+        [
+          {
+            "node": "analise_vaga_ia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "analise_vaga_ia": {
+      "main": [
+        [
+          {
+            "node": "transforma o json de saida em algo palatavel pro proximo script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "18ef784f-e4a4-4489-b9da-6d0c8c9c219c",
+  "meta": {
+    "instanceId": "160aa48a1315d795a094fa59ba3a8b5d28ab82ab0eeec612b3c2870b695b4cbe"
+  },
+  "id": "31bpoOl5mpRMK1lH",
+  "tags": []
+}
