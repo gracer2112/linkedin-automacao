@@ -3,9 +3,12 @@
 !.n8n/.gitkeep
 configs/*
 !configs/.gitkeep
-dados/cv
-dados/entrada
-dados/json
+dados/cv/*
+!dados/cv/.gitkeep
+dados/entrada/*
+!dados/entrada/.gitkeep
+dados/json/*
+!dados/json/.gitkeep
 logs
 /tmp_home_1002
 venv
