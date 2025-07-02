@@ -73,24 +73,23 @@ Exemplo: config.example.json
 }
 
 ```
-```
-Descrição de cada chave
-Chave	                           Descrição
-keyword	                        Termos e cargos a buscar no LinkedIn
-location	                        Localização das vagas
-driver_path	                     Path do ChromeDriver
-data_dir	                        Diretório dos dados de entrada
-input_file_jobs	               Caminho para Excel de vagas abertas
-input_file_cv	                  Caminho para o CV do candidato
-output_file_requirements	      Saída dos requisitos extraídos das vagas
-output_file_error_requirements	Saídas em caso de erro na análise das vagas
-output_file_score	               Resultado do score entre vaga e CV
-output_dir	                     Diretório de saída dos arquivos gerados
-log_dir	                        Diretório dos logs
-config_dir	                     Diretório dos arquivos de configuração
-col_linkedin_job_code	         Nome da coluna do código da vaga
-col_linkedin_job_description	   Nome da coluna da descrição da vaga
-```
+| Chave                            | Descrição                                                  |
+|----------------------------------|------------------------------------------------------------|
+| `keyword`                        | Termos e cargos a buscar no LinkedIn                       |
+| `location`                       | Localização das vagas                                      |
+| `driver_path`                    | Path do ChromeDriver                                       |
+| `data_dir`                       | Diretório dos dados de entrada                             |
+| `input_file_jobs`                | Caminho para Excel de vagas abertas                        |
+| `input_file_cv`                  | Caminho para o CV do candidato                             |
+| `output_file_requirements`       | Saída dos requisitos extraídos das vagas                   |
+| `output_file_error_requirements` | Saídas em caso de erro na análise das vagas                |
+| `output_file_score`              | Resultado do score entre vaga e CV                         |
+| `output_dir`                     | Diretório de saída dos arquivos gerados                    |
+| `log_dir`                        | Diretório dos logs                                         |
+| `config_dir`                     | Diretório dos arquivos de configuração                     |
+| `col_linkedin_job_code`          | Nome da coluna do código da vaga                           |
+| `col_linkedin_job_description`   | Nome da coluna da descrição da vaga                        |
+
 ---
 ## 🐍 Requisitos de instalação
 1. **Dependências Python**
