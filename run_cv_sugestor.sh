@@ -12,7 +12,7 @@ cd /data/linkedin-automacao 2>&1
 source venv/bin/activate 2>&1
 export GOOGLE_APPLICATION_CREDENTIALS="application_default_credentials.json"
 
-venv/bin/python3 scripts/cv_otimizado.py 2>&1
+venv/bin/python3 scripts/cv_sugestor.py 2>&1
 
 #chown -R 1002:1002 output 2>&1
 #chmod -R 775 output 2>&1

@@ -1,3 +1,4 @@
+#analise_vaga_ia.py
 import sys
 from dotenv import load_dotenv
 import os
@@ -65,7 +66,7 @@ def ler_vagas_do_excel(arquivo_excel, coluna_visualizado="Visualizado"):
         else:
             df_visualizado = df  # Se não existir, processa tudo
 
-        #df_visualizado = df_visualizado.head(2) #comentar após testar
+        df_visualizado = df_visualizado.head(2) #comentar após testar
         return df_visualizado  # DataFrame 
     except Exception as e:
         log_erro(f"Erro ao ler o Excel: {e}")
