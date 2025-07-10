@@ -68,3 +68,4 @@ wsproto==1.2.0
 python-docx
 python-dotenv
 docx2pdf
+tenacity

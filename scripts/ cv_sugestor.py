@@ -4,9 +4,11 @@ import sys
 from dotenv import load_dotenv
 import os
 import json
+from tenacity import retry, stop_after_attempt, wait_exponential, before_log
 import logging
 import ast
 import re
+import time
 
 import google.generativeai as genai
 from google.generativeai import types
@@ -24,6 +26,8 @@ if not logger.handlers:
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+
+
 
 # ================= FUNÇÕES DO SCRIPT =================
 
@@ -69,17 +73,23 @@ def interpretar_resposta_ia(resposta_texto):
                 logging.info("Resposta da IA interpretada como um dicionário. Extraindo a lista 'sugestoes'.")
                 return dados_convertidos['sugestoes']
             else:
-                logging.error(f"Dicionário JSON não contém a chave 'sugestoes' ou o valor não é uma lista. Resposta recebida: {cleaned_text}")
-                return []
+                raise ValueError(f"Dicionário JSON não contém a chave 'sugestoes' ou o valor não é uma lista. Resposta recebida: {cleaned_text}")                
         else:
-            logging.error(f"Resposta da IA não é uma lista ou dicionário válido. Tipo recebido: {type(dados_convertidos)}")
-            return []
+            raise ValueError(f"Resposta da IA não é uma lista ou dicionário válido. Tipo recebido: {type(dados_convertidos)}")
+            
     except (ValueError, SyntaxError, TypeError) as e:
         logging.error(f"Erro de parsing ao interpretar a resposta da IA: {e}. Resposta bruta recebida: {resposta_texto}")
-        return []
+        raise
     except Exception as e:
         logging.error(f"Erro genérico inesperado ao interpretar resposta: {e}. Resposta bruta recebida: {resposta_texto}")
-        return []
+        raise
+    
+@retry(
+    wait=wait_exponential(multiplier=1, min=4, max=10), # Espera 4s, 8s, 16s... até 10s max
+    stop=stop_after_attempt(5), # Tenta 5 vezes
+    reraise=True, # Se quiser que a exceção seja propagada após todas as tentativas
+    before_sleep=before_log(logger, logging.INFO, "Tentando novamente em {delay:.1f} segundos...")
+)
 
 def sugerir_substituicoes(genai_model, texto_cv, requisitos_vaga, model="gemini-1.5-flash"):
     """
@@ -117,14 +127,15 @@ Compare com estes requisitos da vaga:
             generation_config=config
         )
         logger.info(f"DEBUG: repr(response.text) antes de interpretar:\n {repr(response.text)}")
+
+        sugestoes_ia = interpretar_resposta_ia(response.text)
+        logger.info(f"DEBUG: Sugestões interpretadas da IA: {sugestoes_ia}")
+        return sugestoes_ia
+    
     except Exception as e:
         logger.error(f"Ocorreu um erro ao chamar a API: {e}")
-        logger.exception("Erro ao gerar sugestões da IA")
-        return []
-
-    sugestoes_ia = interpretar_resposta_ia(response.text)
-    logger.info(f"DEBUG: Sugestões interpretadas da IA: {sugestoes_ia}")
-    return sugestoes_ia
+        logger.exception("Detalhes do erro na função sugerir_substituicoes")
+        raise
 
 def extrair_texto_docx(caminho_arquivo):
     """Extrai texto de um arquivo DOCX."""
@@ -215,6 +226,7 @@ def main():
         
         logger.info(f"Solicitando sugestões IA para vaga {codigo_vaga}...")
         sugestoes_ia = sugerir_substituicoes(genai_instance, texto_cv, requisitos_texto)
+        time.sleep(2)
         logger.info(f"Sugestões recebidas para {codigo_vaga}: {sugestoes_ia}")
 
         # Adição da correção manual da idade (se ainda for necessária)
