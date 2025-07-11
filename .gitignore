@@ -20,3 +20,4 @@ google-chrome-stable_current_amd64.deb
 job_details_error_backup.xlsx
 output/*
 !output/.gitkeep
+arvore.txt

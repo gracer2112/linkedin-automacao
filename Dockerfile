@@ -1,5 +1,4 @@
 # dockerfile
-
 FROM n8nio/n8n:latest
 
 # Define o diretório de trabalho principal dentro do container para sua aplicação
@@ -10,7 +9,7 @@ WORKDIR /data/linkedin-automacao
 # Instala Python e pip
 USER root
 RUN apk update && \
-    apk add --no-cache python3 py3-pip libreoffice openjdk11 bash && \
+    apk add --no-cache python3 py3-pip libreoffice openjdk11 bash tree && \
     rm -rf /var/cache/apk/* 
 
 # Garante que /bin/sh (o shell padrão no Alpine) exista e aponte para /bin/bash
@@ -22,6 +21,7 @@ RUN python3 -m venv ./venv
 
 # Dá permissão de leitura (e execução) ao venv para o usuário node
 RUN chown -R node:node ./venv
+RUN chown -R 1002:1002 ./venv
 
 # Copia o requirements.txt para dentro do container
 COPY requirements.txt .
@@ -39,7 +39,8 @@ RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
 
 # Supondo que você crie o diretório de alguma forma
 RUN mkdir -p /data/linkedin-automacao/output
-RUN chown -R node:node /data/linkedin-automacao/output
+RUN chown -R node:node /data/linkedin-automacao/output && \
+    chown -R user1002:user1002 /data/linkedin-automacao/output
 
 ENV HOME=/data/linkedin-automacao/tmp_home_1002
 
@@ -49,7 +50,7 @@ USER user1002
 
 # Comando padrão para quando o container é iniciado (pode ser sobrescrito pelo docker-compose)
 # Isso permite que você entre no shell para inspecionar
-CMD ["bash"]
+#CMD ["bash"]
 
 # (Opcional: Copie scripts python para dentro do container, se quiser)
 # COPY ./meus-scripts/ /data/meus-scripts/

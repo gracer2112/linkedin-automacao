@@ -1,6 +1,5 @@
 #docker-compose.yml
-version: '3.8'
-
+#version: '3.8'
 services:
   n8n:
     build:
@@ -38,53 +37,6 @@ services:
       - ${DATA_FOLDER}:/home/node/.n8n
       - .:/data/linkedin-automacao
 
-    command: sleep infinity # <--- CORRIGIDO: Comando para iniciar o n8n
     tty: true
     stdin_open: true
-
-# services:
-#   n8n:
-#     build: 
-#     context: .
-#     dockerfile: Dockerfile
-#     container_name: linkedin-automacao-n8n-app
-#     restart: always
-#     user: "${UID}:${GID}"
-
-#   working_dir: /data/linkedin-automacao
-
-#   ports:
-#     - "5678:5678" # Expõe a porta 5678 do contêiner na porta 5678 do host
-
-#   environment:
-#       - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME} # Se você for usar um domínio
-#       - N8N_PORT=5678
-#       - N8N_PROTOCOL=https # Mude para https se usar um proxy reverso com SSL
-#       - NODE_ENV=production
-#       - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/ # Se for usar um domínio
-#       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE} # Defina seu fuso horário
-#       - N8N_USER_FOLDER=/home/node/.n8n
-#       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true 
-#       - N8N_RUNNERS_ENABLED=true 
-#       - N8N_EXPRESS_TRUST_PROX = true
-
-#       # Variáveis da Aplicação (virão do .env)
-#       - LINKEDIN_EMAIL=${LINKEDIN_EMAIL}
-#       - LINKEDIN_PASSWORD=${LINKEDIN_PASSWORD}
-#       - GEMINI_API_KEY=${GEMINI_API_KEY}
-#       - CONFIG_JSON_PATH=${CONFIG_JSON_PATH}
-#       - VERTEX_PROJECT=${VERTEX_PROJECT}
-#       - VERTEX_REGION=${VERTEX_REGION}
-
-#       - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
-
-#   volumes:
-#       - ${DATA_FOLDER}:/home/node/.n8n
-#       - .:/data/linkedin-automacao
-#       #- /home/gracer2112/projetos/linkedin-automacao:/data/linkedin-automacao
-#       #- /home/gracer2112/projetos/linkedin-automacao/application_default_credentials.json:/app/application_default_credentials.json:ro      
-
-#   command: bash # Permite interagir com o contêiner via terminal
-#   tty: true
-#   stdin_open: true    
 
