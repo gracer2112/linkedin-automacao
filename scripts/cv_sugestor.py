@@ -226,7 +226,7 @@ def main():
         
         logger.info(f"Solicitando sugestões IA para vaga {codigo_vaga}...")
         sugestoes_ia = sugerir_substituicoes(genai_instance, texto_cv, requisitos_texto)
-        time.sleep(2)
+        time.sleep(3)
         logger.info(f"Sugestões recebidas para {codigo_vaga}: {sugestoes_ia}")
 
         # Adição da correção manual da idade (se ainda for necessária)
