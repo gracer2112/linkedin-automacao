@@ -26,7 +26,8 @@ Inclui um workflow n8n (JSON) que executa os scripts para análise de vagas, ger
 | `WARNING` | `export MY_LOG_LEVEL=WARNING`   | Mostra apenas avisos e erros. O script não para, mas algo inesperado ocorreu. **Recomendado para execução em produção.** |
 | `ERROR`   | `export MY_LOG_LEVEL=ERROR`     | Mostra apenas mensagens de erros que podem ter interrompido uma tarefa específica.  
 
-## Como Executar
+```
+### Como Executar
 
 O script principal é executado através de um shell script que recebe dados via `stdin`.
 
