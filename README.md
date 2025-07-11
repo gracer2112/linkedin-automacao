@@ -16,6 +16,112 @@ Inclui um workflow n8n (JSON) que executa os scripts para análise de vagas, ger
 - Variáveis de ambiente ajustadas no arquivo `.env` (veja abaixo)
 
 ---
+### Níveis de Log Disponíveis
+
+|
+ Nível 
+|
+ Comando de Exemplo 
+|
+ Descrição 
+|
+|
+:---
+|
+:---
+|
+:---
+|
+|
+**
+`DEBUG`
+**
+|
+`export MY_LOG_LEVEL=DEBUG`
+|
+ Mostra 
+**
+todas
+**
+ as mensagens. Útil para diagnóstico profundo de problemas. 
+|
+|
+**
+`INFO`
+**
+|
+`export MY_LOG_LEVEL=INFO`
+|
+ Mostra mensagens informativas, como o progresso da execução e tentativas de reconexão (
+`retry`
+). 
+**
+Recomendado para desenvolvimento e para acompanhar o fluxo.
+**
+|
+|
+**
+`WARNING`
+**
+|
+`export MY_LOG_LEVEL=WARNING`
+|
+ Mostra apenas avisos e erros. O script não para, mas algo inesperado ocorreu. 
+**
+Recomendado para execução em produção.
+**
+|
+|
+**
+`ERROR`
+**
+|
+`export MY_LOG_LEVEL=ERROR`
+|
+ Mostra apenas mensagens de erros que podem ter interrompido uma tarefa específica. 
+|
+
+## Como Executar
+
+O script principal é executado através de um shell script que recebe dados via `stdin`.
+
+**Estrutura do comando:**
+```bash
+cat [ARQUIVO_DE_ENTRADA] | ./[SCRIPT_DE_EXECUCAO].sh
+```
+
+**Exemplo real:**
+```bash
+cat /data/linkedin-automacao/output/analise_vagas_resultados.json | /data/linkedin-automacao/run_cv_sugestor.sh
+```
+
+---
+
+### Exemplos Práticos de Execução
+
+#### 1. Para Desenvolvimento (Ver logs de `retry`)
+
+Para ver o fluxo completo da aplicação, incluindo as mensagens de "Tentando novamente...", use o nível `INFO`.
+
+```bash
+# Define o nível do log para INFO
+export MY_LOG_LEVEL=INFO
+
+# Executa o script
+cat /data/linkedin-automacao/output/analise_vagas_resultados.json | /data/linkedin-automacao/run_cv_sugestor.sh
+```
+
+#### 2. Para Produção (Execução silenciosa)
+
+Para rodar o script de forma mais limpa, mostrando apenas avisos importantes e erros, use o nível `WARNING`.
+
+```bash
+# Define o nível do log para WARNING
+export MY_LOG_LEVEL=WARNING
+
+# Executa o script
+cat /data/linkedin-automacao/output/analise_vagas_resultados.json | /data/linkedin-automacao/run_cv_sugestor.sh
+```
 
 ## 🛠️ Instalação
 

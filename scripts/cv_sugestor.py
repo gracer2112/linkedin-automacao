@@ -48,6 +48,11 @@ def stdin_has_data():
     rlist, _, _ = select.select([sys.stdin], [], [], 0)
     return bool(rlist)
 
+def log_custom_before_sleep(retry_state):
+    """Função que loga uma mensagem customizada antes de cada tentativa."""
+    delay = retry_state.next_action.sleep
+    logger.info(f"API retornou erro ou resposta inválida. Tentando novamente em {delay:.1f} segundos...")
+
 def interpretar_resposta_ia(resposta_texto):
     """
     Interpreta e limpa a resposta da IA para garantir que seja um JSON válido.
@@ -88,7 +93,7 @@ def interpretar_resposta_ia(resposta_texto):
     wait=wait_exponential(multiplier=1, min=4, max=10), # Espera 4s, 8s, 16s... até 10s max
     stop=stop_after_attempt(5), # Tenta 5 vezes
     reraise=True, # Se quiser que a exceção seja propagada após todas as tentativas
-    before_sleep=before_log(logger, logging.INFO, "Tentando novamente em {delay:.1f} segundos...")
+    before_sleep=log_custom_before_sleep
 )
 
 def sugerir_substituicoes(genai_model, texto_cv, requisitos_vaga, model="gemini-1.5-flash"):
