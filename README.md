@@ -19,8 +19,8 @@ Inclui um workflow n8n (JSON) que executa os scripts para análise de vagas, ger
 ### Níveis de Log Disponíveis
 
 ```bash
-| Nível     | Comando de Exemplo              |Descrição                                                                                                                                                          |
-|-----------|---------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Nível     | Comando de Exemplo              |Descrição                                                                                                                                                         |
+|-----------|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `DEBUG`   | `export MY_LOG_LEVEL=DEBUG`     | Mostra **todas** as mensagens. Útil para diagnóstico profundo de problemas.                                                                                      |
 | `INFO`    | `export MY_LOG_LEVEL=INFO`      | Mostra mensagens informativas, como o progresso da execução e tentativas de reconexão (`retry`). **Recomendado para desenvolvimento e para acompanhar o fluxo.** |
 | `WARNING` | `export MY_LOG_LEVEL=WARNING`   | Mostra apenas avisos e erros. O script não para, mas algo inesperado ocorreu. **Recomendado para execução em produção.**                                         |
