@@ -5,7 +5,7 @@ echo -e "\n==== Inicio $(date) ====" 2>> /data/linkedin-automacao/logs/cv_logs.t
 #id 2>&1
 
 #export HOME=/data/linkedin-automacao/tmp_home_1002
-export MY_LOG_LEVEL=WARNING
+export MY_LOG_LEVEL=INFO
 
 cd /data/linkedin-automacao 2>&1
 

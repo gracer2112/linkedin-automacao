@@ -145,6 +145,70 @@ Exemplo: config.example.json
 | `col_linkedin_job_description`   | Nome da coluna da descrição da vaga                        |
 
 ---
+**Formato dos Arquivos de Entrada**
+Os scripts deste projeto dependem de um formato específico para os dados de entrada, garantindo que as informações necessárias para a análise e sugestão sejam processadas corretamente.
+
+*Arquivo Excel de Vagas (para analise_vaga_ia.py)*
+Este é o arquivo de entrada inicial que contém as vagas a serem analisadas. O script analise_vaga_ia.py espera um arquivo Excel (.xls ou .xlsx) com as seguintes colunas. É crucial que os nomes das colunas correspondam exatamente ao que é esperado pelo script.
+
+````
+Coluna Necessária	Tipo	Descrição	Configuração Via linkedin.json / .env (Padrão)
+<nome_da_coluna_descrição>	string	Obrigatória. Contém a descrição completa da vaga. O nome desta coluna é configurável pela chave col_linkedin_job_description.	col_linkedin_job_description (Padrão: "Description")
+Code	string	Obrigatória. Contém o identificador único para cada vaga. Este nome de coluna é fixo (hardcoded) no script analise_vaga_ia.py, independentemente do valor de col_linkedin_job_code no linkedin.json.	N/A (nome fixo)
+Visualizado	string	Coluna utilizada para filtrar vagas já processadas. Vagas com valor NaN (vazio) ou "" (string vazia) nesta coluna serão processadas. O nome desta coluna é configurável pela chave col_linkedin_job_visualizado.	col_linkedin_job_visualizado (Padrão: "Visualizado")
+Company	string	Nome da empresa associada à vaga. Este nome de coluna é fixo (hardcoded) no script analise_vaga_ia.py.	N/A (nome fixo)
+Link	string	URL da vaga no LinkedIn ou outra plataforma. Este nome de coluna é fixo (hardcoded) no script analise_vaga_ia.py.	N/A (nome fixo)
+[Outras Colunas Opcionais]	variado	Quaisquer outras colunas presentes no Excel serão lidas, mas não são processadas diretamente pelo analise_vaga_ia.py para a análise principal. Podem ser úteis para metadados ou para outros scripts da sua automação.	N/A
+
+*Exemplo de Conteúdo do Excel (Folha Sheet1):*
+
+Abaixo, um exemplo com os nomes de coluna padrão (Description, Visualizado) e os nomes fixos (Code, Company, Link).
+```
+Code	Description	Company	Link	Visualizado	Localização
+VAGA_001	Desenvolvedor Python com experiência em Django e Docker.	Tech Solutions Inc.	https://www.linkedin.com/jobs/12345		Remoto
+VAGA_002	Analista de Dados Pleno com Power BI e SQL.	Data Insights Ltda.	https://www.linkedin.com/jobs/67890		São Paulo
+VAGA_003	Especialista em Cloud AWS e Kubernetes.	Cloud Innovators	https://www.linkedin.com/jobs/abcde	sim	Rio de Janeiro
+Observação Importante sobre Nomes de Colunas: Certifique-se de que o nome da coluna de descrição da vaga no seu Excel corresponda ao valor definido em col_linkedin_job_description (ex: se seu Excel tem a coluna JobDescription, configure col_linkedin_job_description=JobDescription). No entanto, as colunas Code, Company e Link devem ter esses nomes exatos no seu arquivo Excel, pois eles são diretamente referenciados no código.
+
+analise_vagas_resultados.json
+Este arquivo é a saída esperada do processo de análise de vagas e serve como entrada para scripts como o cv_sugestor.py e aderencia_cv_vaga_ia.py. Ele deve ser um array JSON, onde cada objeto representa uma vaga analisada e contém as seguintes chaves:
+
+Chave	Tipo	Descrição	Exemplo
+codigo_vaga	string	Identificador único da vaga.	"VAGA_001"
+descricao_vaga_original	string	Descrição completa da vaga como obtida originalmente (texto bruto).	"Responsável por desenvolvimento Backend..."
+requisitos_vaga_analisado	string	Requisitos da vaga após serem processados/analisados pela IA (texto otimizado para comparação).	"Experiência em Python, APIs REST, SQL..."
+outras_infos_relevantes	object	Objeto contendo outras informações extraídas da vaga, como titulo, empresa, localizacao, etc.	{"titulo": "Dev Python Jr", "empresa": "Tech Solutions"}
+status_analise	string	Status da análise da vaga ("SUCESSO", "FALHA_PROCESSAMENTO", etc.).	"SUCESSO"
+
+*Exemplo de Estrutura do JSON:*
+```json
+[
+  {
+    "codigo_vaga": "VAGA_001",
+    "descricao_vaga_original": "Descrição completa da vaga de Desenvolvedor Python com foco em APIs e bancos de dados.",
+    "requisitos_vaga_analisado": "Experiência em Python, Flask/Django, SQLAlchemy, PostgreSQL, Docker, metodologias ágeis.",
+    "outras_infos_relevantes": {
+      "titulo": "Desenvolvedor Python Pleno",
+      "empresa": "Empresa X",
+      "localizacao": "Remoto"
+    },
+    "status_analise": "SUCESSO"
+  },
+  {
+    "codigo_vaga": "VAGA_002",
+    "descricao_vaga_original": "Vaga para Analista de Dados com experiência em Power BI e SQL.",
+    "requisitos_vaga_analisado": "Análise de dados, SQL, Power BI, Excel avançado, storytelling com dados.",
+    "outras_infos_relevantes": {
+      "titulo": "Analista de Dados",
+      "empresa": "Data Insights",
+      "localizacao": "São Paulo"
+    },
+    "status_analise": "SUCESSO"
+  }
+]
+```
+---
+
 ## 🐍 Requisitos de instalação
 1. **Dependências Python**
 

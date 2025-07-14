@@ -17,7 +17,7 @@
     {
       "parameters": {
         "executeOnce": false,
-        "command": "=cat /data/linkedin-automacao/output/analise_vagas_resultados.json | . /data/linkedin-automacao/run_cv_otimizado.sh"
+        "command": "=cat /data/linkedin-automacao/output/analise_vagas_resultados.json | . /data/linkedin-automacao/run_cv_sugestor.sh"
       },
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
@@ -61,7 +61,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        620,
+        740,
         -100
       ],
       "id": "d5413277-b299-45bb-9fc7-617f027bffa9",
@@ -98,8 +98,20 @@
       "id": "2c36bb9e-691f-48b0-a8ea-57c31263082c",
       "name": "analise_vaga_ia",
       "notesInFlow": false,
-      "disabled": true,
       "notes": "Le as vagas capturadas no linkedin e gera um json de requisitos de vaga"
+    },
+    {
+      "parameters": {
+        "command": ". /data/linkedin-automacao/run_cv_aplicador.sh"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        540,
+        -100
+      ],
+      "id": "90a9f1d5-4ec3-4d55-97ce-23c1c96905ad",
+      "name": "Execute Command"
     }
   ],
   "pinData": {},
@@ -135,7 +147,7 @@
       "main": [
         [
           {
-            "node": "Merge1",
+            "node": "Execute Command",
             "type": "main",
             "index": 0
           }
@@ -163,13 +175,24 @@
           }
         ]
       ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "18ef784f-e4a4-4489-b9da-6d0c8c9c219c",
+  "versionId": "286c6f3d-403e-43f7-83d6-ac452e0c691e",
   "meta": {
     "instanceId": "160aa48a1315d795a094fa59ba3a8b5d28ab82ab0eeec612b3c2870b695b4cbe"
   },
