@@ -173,6 +173,7 @@ Abaixo, um exemplo com os nomes de coluna padrão (Description, Visualizado) e o
 | VAGA_003 | Especialista em Cloud AWS e Kubernetes.                             | Cloud Innovators     | `https://www.linkedin.com/jobs/abcde`  | `sim`       | Rio de Janeiro  |
 
 analise_vagas_resultados.json
+
 Este arquivo é a saída esperada do processo de análise de vagas e serve como entrada para scripts como o cv_sugestor.py e aderencia_cv_vaga_ia.py. Ele deve ser um array JSON, onde cada objeto representa uma vaga analisada e contém as seguintes chaves:
 
 | Chave                      | Tipo   | Descrição                                                                                               | Exemplo                                   |
