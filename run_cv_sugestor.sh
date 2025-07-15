@@ -1,4 +1,5 @@
 #!/bin/bash
+#run_cv_sugestor.sh
 echo -e "\n==== Inicio $(date) ====" 2>> /data/linkedin-automacao/logs/cv_logs.txt
 
 #whoami 2>&1

@@ -1,4 +1,5 @@
 #!/bin/bash
+#run_cd_aplicador.sh
 echo -e "\n==== Inicio $(date) ====" 2>> /data/linkedin-automacao/logs/cv_aplicador.txt
 
 #whoami 2>&1

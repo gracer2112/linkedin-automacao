@@ -1,4 +1,5 @@
 #!/bin/bash
+#run_aderencia.sh
 export MY_LOG_LEVEL=WARNING
 cd /data/linkedin-automacao
 source venv/bin/activate

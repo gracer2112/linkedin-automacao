@@ -153,14 +153,56 @@ Os scripts deste projeto dependem de um formato específico para os dados de ent
 
 Este é o arquivo de entrada inicial que contém as vagas a serem analisadas. O script analise_vaga_ia.py espera um arquivo Excel (.xls ou .xlsx) com as seguintes colunas. É crucial que os nomes das colunas correspondam exatamente ao que é esperado pelo script.
 
-| Coluna Necessária          | Tipo     | Descrição                                                                                                                                                                                                                           | Configuração Via `linkedin.json` / `.env` (Padrão)                  |
-| :------------------------- | :------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------ |
-| `<nome_da_coluna_descrição>` | `string` | **Obrigatória.** Contém a descrição completa da vaga. O nome desta coluna é configurável pela chave `col_linkedin_job_description`.                                                                                             | `col_linkedin_job_description` (Padrão: `"Description"`)             |
-| `Code`                     | `string` | **Obrigatória.** Contém o identificador único para cada vaga. **Este nome de coluna é fixo (hardcoded) no script `analise_vaga_ia.py`, independentemente do valor de `col_linkedin_job_code` no `linkedin.json`.**               | N/A (nome fixo)                                                     |
-| `Visualizado`              | `string` | Coluna utilizada para filtrar vagas já processadas. Vagas com valor `NaN` (vazio) ou `""` (string vazia) nesta coluna serão processadas. O nome desta coluna é configurável pela chave `col_linkedin_job_visualizado`.            | `col_linkedin_job_visualizado` (Padrão: `"Visualizado"`)            |
-| `Company`                  | `string` | Nome da empresa associada à vaga. **Este nome de coluna é fixo (hardcoded) no script `analise_vaga_ia.py`.**                                                                                                                    | N/A (nome fixo)                                                     |
-| `Link`                     | `string` | URL da vaga no LinkedIn ou outra plataforma. **Este nome de coluna é fixo (hardcoded) no script `analise_vaga_ia.py`.**                                                                                                            | N/A (nome fixo)                                                     |
-| `[Outras Colunas Opcionais]` | `variado`| Quaisquer outras colunas presentes no Excel serão lidas, mas não são processadas diretamente pelo `analise_vaga_ia.py` para a análise principal. Podem ser úteis para metadados ou para outros scripts da sua automação. | N/A                                                                 |
+Com certeza! Aqui está a tabela atualizada com as informações revisadas, seguindo o formato que você solicitou:
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th scope="col">Coluna Necessária</th>
+      <th scope="col">Tipo</th>
+      <th scope="col">Descrição</th>
+      <th scope="col">Configuração Via <code>linkedin.json</code> / <code>.env</code> (Padrão)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>&lt;nome_da_coluna_descrição&gt;</code></td>
+      <td><code>string</code></td>
+      <td><strong>Obrigatória.</strong> Contém a descrição completa da vaga. O nome desta coluna é configurável pela chave <code>col_linkedin_job_description</code>, e <strong>DEVE corresponder exatamente ao nome da coluna no seu Excel (ex: <code>job_description</code>).</strong></td>
+      <td><code>col_linkedin_job_description</code> (Padrão: <code>"Description"</code>)</td>
+    </tr>
+    <tr>
+      <td><code>Code</code></td>
+      <td><code>string</code></td>
+      <td><strong>Obrigatória.</strong> Contém o identificador único para cada vaga. <strong>O script <code>analise_vaga_ia.py</code> acessa esta coluna pelo nome literal <code>"Code"</code>. A coluna no seu Excel DEVE ser nomeada <code>Code</code> (com "C" maiúsculo).</strong></td>
+      <td><code>col_linkedin_job_code</code> (Padrão: <code>"Code"</code>)</td>
+    </tr>
+    <tr>
+      <td><code>Visualizado</code></td>
+      <td><code>string</code></td>
+      <td>Coluna utilizada para filtrar vagas já processadas. Vagas com valor <code>NaN</code> (vazio) ou <code>""</code> (string vazia) nesta coluna serão processadas. O nome desta coluna é configurável pela chave <code>col_linkedin_job_visualizado</code>. <strong>(No <code>job_details.xlsx</code> fornecido, a coluna <code>muito_antigo</code> pode ser mapeada para esta chave via configuração).</strong></td>
+      <td><code>col_linkedin_job_visualizado</code> (Padrão: <code>"Visualizado"</code>)</td>
+    </tr>
+    <tr>
+      <td><code>Company</code></td>
+      <td><code>string</code></td>
+      <td>Nome da empresa associada à vaga. <strong>O script <code>analise_vaga_ia.py</code> acessa esta coluna pelo nome literal <code>"Company"</code>. A coluna no seu Excel DEVE ser nomeada <code>Company</code> (com "C" maiúsculo).</strong></td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td><code>Link</code></td>
+      <td><code>string</code></td>
+      <td>URL da vaga no LinkedIn ou outra plataforma. <strong>O script <code>analise_vaga_ia.py</code> acessa esta coluna pelo nome literal <code>"Link"</code>. A coluna no seu Excel DEVE ser nomeada <code>Link</code> (com "L" maiúsculo).</strong></td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td><code>[Outras Colunas Opcionais]</code></td>
+      <td><code>variado</code></td>
+      <td>Quaisquer outras colunas presentes no Excel serão lidas, mas não são processadas diretamente pelo <code>analise_vaga_ia.py</code> para a análise principal. Podem ser úteis para metadados ou para outros scripts da sua automação.</td>
+      <td>N/A</td>
+    </tr>
+  </tbody>
+</table>
 
 *Exemplo de Conteúdo do Excel (Folha Sheet1):*
 
