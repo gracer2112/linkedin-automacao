@@ -153,8 +153,6 @@ Os scripts deste projeto dependem de um formato específico para os dados de ent
 
 Este é o arquivo de entrada inicial que contém as vagas a serem analisadas. O script analise_vaga_ia.py espera um arquivo Excel (.xls ou .xlsx) com as seguintes colunas. É crucial que os nomes das colunas correspondam exatamente ao que é esperado pelo script.
 
-Com certeza! Aqui está a tabela atualizada com as informações revisadas, seguindo o formato que você solicitou:
-
 <table class="data-table">
   <thead>
     <tr>
@@ -214,43 +212,105 @@ Abaixo, um exemplo com os nomes de coluna padrão (Description, Visualizado) e o
 | VAGA_002 | Analista de Dados Pleno com Power BI e SQL.                         | Data Insights Ltda. | `https://www.linkedin.com/jobs/67890`  |             | São Paulo       |
 | VAGA_003 | Especialista em Cloud AWS e Kubernetes.                             | Cloud Innovators     | `https://www.linkedin.com/jobs/abcde`  | `sim`       | Rio de Janeiro  |
 
-analise_vagas_resultados.json
+_analise_vagas_resultados.json_
 
 Este arquivo é a saída esperada do processo de análise de vagas e serve como entrada para scripts como o cv_sugestor.py e aderencia_cv_vaga_ia.py. Ele deve ser um array JSON, onde cada objeto representa uma vaga analisada e contém as seguintes chaves:
 
-| Chave                      | Tipo   | Descrição                                                                                               | Exemplo                                   |
-| :------------------------- | :----- | :------------------------------------------------------------------------------------------------------ | :---------------------------------------- |
-| `codigo_vaga`              | `string` | Identificador único da vaga.                                                                           | `"VAGA_001"`                              |
-| `descricao_vaga_original`  | `string` | Descrição completa da vaga como obtida originalmente (texto bruto).                                    | `"Responsável por desenvolvimento Backend..."` |
-| `requisitos_vaga_analisado`| `string` | Requisitos da vaga após serem processados/analisados pela IA (texto otimizado para comparação).        | `"Experiência em Python, APIs REST, SQL..."` |
-| `outras_infos_relevantes`  | `object` | Objeto contendo outras informações extraídas da vaga, como `titulo`, `empresa`, `localizacao`, etc.    | `{"titulo": "Dev Python Jr", "empresa": "Tech Solutions"}` |
-| `status_analise`           | `string` | Status da análise da vaga (`"SUCESSO"`, `"FALHA_PROCESSAMENTO"`, etc.).                                | `"SUCESSO"`                               |
+<table class="data-table"> 
+  <thead>
+    <tr>
+      <th scope="col">Chave</th>
+      <th scope="col">Tipo</th>
+      <th scope="col">Descrição</th>
+      <th scope="col">Exemplo (conteúdo real)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>analise</code></td>
+      <td><code>object</code></td>
+      <td>Objeto contendo a análise estruturada da vaga, conforme extraída pela IA (Gemini). Inclui:
+          <li><code>titulo</code> (string): Título da vaga.</li>
+          <li><code>localizacao</code> (string): Localização da vaga.</li>
+          <li><code>senioridade</code> (string): Nível de senioridade.</li>
+          <li><code>requisitos_obrigatorios</code> (array de strings): Lista de requisitos obrigatórios.</li>
+          <li><code>requisitos_desejaveis</code> (array de strings): Lista de requisitos desejáveis.</li>
+          <li><code>soft_skills</code> (array de strings): Lista de soft skills.</li>
+          <li><code>hard_skills</code> (array de strings): Lista de hard skills.</li>
+      </td>
+      <td><code>{<br>&nbsp;&nbsp;"titulo": "Desenvolvedor Python",<br>&nbsp;&nbsp;"localizacao": "Remoto",<br>&nbsp;&nbsp;"senioridade": "Pleno",<br>&nbsp;&nbsp;"requisitos_obrigatorios": ["Python", "Django", "SQL"],<br>&nbsp;&nbsp;"requisitos_desejaveis": ["Docker", "Kubernetes"],<br>&nbsp;&nbsp;"soft_skills": ["Comunicação", "Trabalho em Equipe"],<br>&nbsp;&nbsp;"hard_skills": ["Desenvolvimento Backend"]<br>}</code></td>
+    </tr>
+    <tr>
+      <td><code>referencia</code></td>
+      <td><code>object</code></td>
+      <td>Objeto contendo as informações de referência da vaga, provenientes do arquivo de entrada (Excel). Inclui:
+          <li><code>Code</code> (string): Identificador único da vaga.</li>
+          <li><code>Company</code> (string): Nome da empresa.</li>
+          <li><code>Link</code> (string): URL da vaga original.</li>
+      </td>
+      <td><code>{<br>&nbsp;&nbsp;"Code": "VAGA_001",<br>&nbsp;&nbsp;"Company": "Tech Solutions Inc.",<br>&nbsp;&nbsp;"Link": "https://www.linkedin.com/jobs/12345"<br>}</code></td>
+    </tr>
+  </tbody>
+</table>                          |
 
 *Exemplo de Estrutura do JSON:*
 
 ```json
 [
   {
-    "codigo_vaga": "VAGA_001",
-    "descricao_vaga_original": "Descrição completa da vaga de Desenvolvedor Python com foco em APIs e bancos de dados.",
-    "requisitos_vaga_analisado": "Experiência em Python, Flask/Django, SQLAlchemy, PostgreSQL, Docker, metodologias ágeis.",
-    "outras_infos_relevantes": {
+    "analise": {
       "titulo": "Desenvolvedor Python Pleno",
-      "empresa": "Empresa X",
-      "localizacao": "Remoto"
+      "localizacao": "Remoto",
+      "senioridade": "Pleno",
+      "requisitos_obrigatorios": [
+        "Python",
+        "Django",
+        "SQL"
+      ],
+      "requisitos_desejaveis": [
+        "Docker",
+        "Kubernetes"
+      ],
+      "soft_skills": [
+        "Comunicação",
+        "Trabalho em Equipe"
+      ],
+      "hard_skills": [
+        "Desenvolvimento Backend"
+      ]
     },
-    "status_analise": "SUCESSO"
+    "referencia": {
+      "Code": "VAGA_001",
+      "Company": "Tech Solutions Inc.",
+      "Link": "https://www.linkedin.com/jobs/12345"
+    }
   },
   {
-    "codigo_vaga": "VAGA_002",
-    "descricao_vaga_original": "Vaga para Analista de Dados com experiência em Power BI e SQL.",
-    "requisitos_vaga_analisado": "Análise de dados, SQL, Power BI, Excel avançado, storytelling com dados.",
-    "outras_infos_relevantes": {
+    "analise": {
       "titulo": "Analista de Dados",
-      "empresa": "Data Insights",
-      "localizacao": "São Paulo"
+      "localizacao": "São Paulo",
+      "senioridade": "Pleno",
+      "requisitos_obrigatorios": [
+        "Análise de Dados",
+        "SQL",
+        "Power BI"
+      ],
+      "requisitos_desejaveis": [
+        "Excel avançado",
+        "Storytelling"
+      ],
+      "soft_skills": [
+        "Pensamento Analítico"
+      ],
+      "hard_skills": [
+        "Visualização de Dados"
+      ]
     },
-    "status_analise": "SUCESSO"
+    "referencia": {
+      "Code": "VAGA_002",
+      "Company": "Data Insights Ltda.",
+      "Link": "https://www.linkedin.com/jobs/67890"
+    }
   }
 ]
 ```
