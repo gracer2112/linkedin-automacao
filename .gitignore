@@ -12,6 +12,8 @@ dados/json/*
 logs/*
 !logs/.gitkeep
 /tmp_home_1002
+chromedriver-win64/*
+*.old
 venv
 application_default_credentials.json
 chromedriver-linux64.zip
@@ -21,3 +23,7 @@ job_details_error_backup.xlsx
 output/*
 !output/.gitkeep
 arvore.txt
+jobscontainer.txt
+otimizador_cv.txt
+rota.txt
+scripts/search_linkedin.txt
