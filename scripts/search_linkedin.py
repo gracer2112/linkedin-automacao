@@ -217,7 +217,8 @@ class EasyApplyLinkedin:
                 logger.info("Baixando e usando o ChromeDriver mais recente via WebDriverManager.")
             
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
-            self.wait = WebDriverWait(self.driver, 20)   
+            self.wait = WebDriverWait(self.driver, 10) 
+            self.driver.maximize_window()   
             self.driver.implicitly_wait(15) 
             self.driver.set_page_load_timeout(60)
             
@@ -617,7 +618,7 @@ class EasyApplyLinkedin:
             print(f"DEBUG: Erro em _apply_hibrido_filter: {e}")
             return False
 
-    def submmit_application(self, job_card_element, visualizado=""):
+    def submmit_application(self, job_card_element, visualizado):
         """
         Submete o CV para vagas com candidatura simplificada e gera dataframe.
         job_card_element: O elemento web que representa o cartão da vaga na lista.
@@ -765,7 +766,7 @@ class EasyApplyLinkedin:
         jobs_collected = 0
         last_height = 0
         # --- Definição de variáveis que estavam faltando ---
-        items_per_page = 24  # Valor comum para o LinkedIn, ajuste se necessário        
+        items_per_page = 25  # Valor comum para o LinkedIn, ajuste se necessário        
         # --- Obter o número total de vagas exibido na interface ---
         total_results_int = 0
         total_pages_int = 1  
@@ -871,16 +872,71 @@ class EasyApplyLinkedin:
             logger.info(f"Encontrados {len(job_cards_on_page)} cartões de vaga na página {current_page} após rolagem.")
             
             for i, card in enumerate(job_cards_on_page):
+                job_link = None
+                job_title = None
+                
+            for i, card in enumerate(job_cards_on_page):
+                job_link = None
+                job_title = None
+                job_id = card.get_attribute('data-occludable-job-id') # Já está pegando o ID, ótimo!
+
                 try:
-                    job_link_element = card.find_element(By.CSS_SELECTOR, 'a.job-card-container__link')
-                    job_link = job_link_element.get_attribute('href')
-                except NoSuchElementException:
-                    logger.warning(f"Link da vaga não encontrado para o card {i+1}. Pulando este card.")
+                    # **NOVA ETAPA DE FORÇAR O CARREGAMENTO DO CONTEÚDO**
+                    # 1. Rolagem explícita para a visualização: Garante que o card está visível na tela
+                    self.driver.execute_script("arguments[0].scrollIntoView(true);", card)
+                    time.sleep(1) # Pequena pausa para a rolagem terminar
+
+                    # 2. Hover sobre o card: Muitas vezes, o hover ativa o lazy loading
+                    hover = ActionChains(self.driver).move_to_element(card)
+                    hover.perform()
+                    
+                    # 3. Aumentar o tempo de espera APÓS o hover para dar mais chance de carregamento
+                    # Tente 3, 4 ou até 5 segundos. Comece com 4 segundos.
+                    time.sleep(4) 
+                    
+                    # 4. Agora, tente encontrar o elemento do link com WebDriverWait (que já está configurado com seu tempo alto)
+                    # O XPath continua o mesmo, pois o HTML esperado é esse.
+                    job_link_locator = (By.XPATH, 
+                        f"//li[@data-occludable-job-id='{job_id}']//a[contains(@class, 'job-card-container__link') and contains(@class, 'job-card-list__title--link')]"
+                    )
+                    
+                    link_element_found_by_wait = self.wait.until(
+                        EC.visibility_of_element_located(job_link_locator), # Continua sendo o correto, pois o elemento PRECISA estar visível
+                        message=f"Timed out waiting for job link to become visible for card ID: {job_id}"
+                    )
+                    
+                    job_link = link_element_found_by_wait.get_attribute('href')
+                    
+                    # O título (<strong>) está dentro do <a>. Podemos pegá-lo diretamente do link_element_found_by_wait
+                    job_title_element = link_element_found_by_wait.find_element(By.TAG_NAME, 'strong')
+                    job_title = job_title_element.text.strip()
+                    
+                    logger.info(f"Link da vaga encontrado: {job_link}, Título: {job_title}")
+
+                except (NoSuchElementException, TimeoutException) as e:
+                    logger.warning(f"Não foi possível encontrar o link/título da vaga para o card {i+1} (ID: {job_id if 'job_id' in locals() else 'N/A'}). Pulando este card. Erro: {type(e).__name__}: {e}")
+                    # Loga o HTML do card NO MOMENTO DA EXCEÇÃO (será o HTML vazio neste caso)
+                    logger.debug(f"HTML do card problemático (empty or content not loaded): {card.get_attribute('outerHTML')}")
                     continue
+
+                try:
+                    visualizado_locator = (By.XPATH, 
+                        f"//li[@data-occludable-job-id='{job_id}']//li[contains(@class, 'job-card-container__footer-item') and contains(@class, 'job-card-container__footer-job-state') and contains(@class, 't-bold')]"
+                    )
+                    
+                    # Espera que o elemento "Visualizado" esteja presente (não precisa ser visível se for só para extrair texto)
+                    viewed_badge_element = self.wait.until(
+                        EC.presence_of_element_located(visualizado_locator),
+                        message=f"Timed out waiting for 'Visualizado' badge for card ID: {job_id}"
+                    )
+                    visualizado = viewed_badge_element.text.strip()
+                except (NoSuchElementException,TimeoutException):
+                        visualizado = ""
+                        continue
 
                 if job_link and job_link not in self.seen_job_ids:
                     try:
-                        job_data = self.submmit_application(card)
+                        job_data = self.submmit_application(card,visualizado)
                         
                         if job_data and job_data.get('Link'):
                             self.job_details.append(job_data)
