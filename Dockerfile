@@ -20,9 +20,6 @@ RUN ln -sf /bin/bash /bin/sh
 RUN addgroup -g 1002 user1002 && \
     adduser -D -u 1002 -G user1002 -h /data/linkedin-automacao/tmp_home_1002 user1002
 
-USER node
-RUN chown -R node:node /data/linkedin-automacao
-
 # Cria virtualenv isolado para dependências Python
 RUN python3 -m venv /opt/venv
 
@@ -57,9 +54,11 @@ RUN /opt/venv/bin/pip install --upgrade pip && \
 # Copia o restante dos arquivos da sua aplicação para o container.
 COPY . .
 
+USER node
+RUN chown -R node:node /data/linkedin-automacao
+
 # Retorne o usuário padrão do n8n para segurança
 USER user1002
-
 
 #RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
 #    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
