@@ -26,11 +26,13 @@ RUN python3 -m venv /opt/venv
 # Dá permissão total ao 'user1002' para acessar o ambiente virtual e o diretório de saída 'output'.
 # Isso é crucial, pois o container rodará como 'user1002'.
 RUN chown -R user1002:user1002 /opt/venv
+RUN chown -R node:node /opt/venv
 
 # Supondo que você crie o diretório de alguma forma
 RUN mkdir -p /data/linkedin-automacao/output && \
     chown -R user1002:user1002 /data/linkedin-automacao/output
 
+RUN chown -R node:node /data/linkedin-automacao
 
 # Copia o requirements.txt para dentro do container
 COPY requirements.txt .
@@ -54,9 +56,6 @@ RUN /opt/venv/bin/pip install --upgrade pip && \
 # Copia o restante dos arquivos da sua aplicação para o container.
 COPY . .
 
-USER node
-RUN chown -R node:node /data/linkedin-automacao
-
 # Retorne o usuário padrão do n8n para segurança
 USER user1002
 
@@ -78,7 +77,3 @@ USER user1002
 
 # (Opcional) Exemplo de cmd para rodar scripts python:
 # CMD ["/data/venv/bin/python", "/data/meus-scripts/seuscript.py"]
-
-# Dá permissão de leitura (e execução) ao venv para o usuário node
-# RUN chown -R node:node ./venv
-# RUN chown -R 1002:1002 ./venv
