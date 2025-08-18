@@ -16,6 +16,9 @@ RUN apk update && \
 # Isso é útil se algum script interno da imagem base esperar /bin/sh
 RUN ln -sf /bin/bash /bin/sh
 
+USER node
+RUN chown -R node:node /data/linkedin-automacao
+
 # Criação do user1002 e home
 RUN addgroup -g 1002 user1002 && \
     adduser -D -u 1002 -G user1002 -h /data/linkedin-automacao/tmp_home_1002 user1002
@@ -57,7 +60,7 @@ COPY . .
 # Retorne o usuário padrão do n8n para segurança
 USER user1002
 
-#USER node
+
 #RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
 #    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
 
