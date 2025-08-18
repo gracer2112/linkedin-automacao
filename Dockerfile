@@ -16,12 +16,12 @@ RUN apk update && \
 # Isso é útil se algum script interno da imagem base esperar /bin/sh
 RUN ln -sf /bin/bash /bin/sh
 
-USER node
-RUN chown -R node:node /data/linkedin-automacao
-
 # Criação do user1002 e home
 RUN addgroup -g 1002 user1002 && \
     adduser -D -u 1002 -G user1002 -h /data/linkedin-automacao/tmp_home_1002 user1002
+
+USER node
+RUN chown -R node:node /data/linkedin-automacao
 
 # Cria virtualenv isolado para dependências Python
 RUN python3 -m venv /opt/venv
