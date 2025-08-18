@@ -49,7 +49,7 @@ ENV PYTHONUNBUFFERED=1
 # Instala as dependências Python usando o pip do venv.
 # Agora, o '/opt/venv/bin/pip' deve ser encontrado corretamente.
 RUN /opt/venv/bin/pip install --upgrade pip && \
-    /opt/venv/bin/pip install --break-system-packages -r requirements.txt
+    /opt/venv/bin/pip install --break-system-packages --use-deprecated=legacy-resolver -r requirements.txt
 
 # Copia o restante dos arquivos da sua aplicação para o container.
 COPY . .
