@@ -59,14 +59,14 @@ COPY . .
 # Retorne o usuário padrão do n8n para segurança
 USER user1002
 
-#RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
-#    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
+RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
+    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
 
 
-#RUN chown -R node:node /data/linkedin-automacao/output && \
-#    chown -R user1002:user1002 /data/linkedin-automacao/output
+RUN chown -R node:node /data/linkedin-automacao/output && \
+    chown -R user1002:user1002 /data/linkedin-automacao/output
 
-# ENV HOME=/data/linkedin-automacao/tmp_home_1002
+ENV HOME=/data/linkedin-automacao/tmp_home_1002
 
 # Comando padrão para quando o container é iniciado (pode ser sobrescrito pelo docker-compose)
 # Isso permite que você entre no shell para inspecionar
