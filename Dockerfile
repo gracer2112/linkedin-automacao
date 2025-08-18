@@ -25,14 +25,20 @@ RUN python3 -m venv /opt/venv
 
 # Dá permissão total ao 'user1002' para acessar o ambiente virtual e o diretório de saída 'output'.
 # Isso é crucial, pois o container rodará como 'user1002'.
-RUN chown -R user1002:user1002 /opt/venv
-RUN chown -R node:node /opt/venv
+RUN chown -R node:node /opt/venv && \
+    chown -R user1002:user1002 /opt/venv
 
 # Supondo que você crie o diretório de alguma forma
 RUN mkdir -p /data/linkedin-automacao/output && \
     chown -R user1002:user1002 /data/linkedin-automacao/output
 
 RUN chown -R node:node /data/linkedin-automacao
+
+RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
+    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
+
+RUN chown -R node:node /data/linkedin-automacao/output && \
+    chown -R user1002:user1002 /data/linkedin-automacao/output
 
 # Copia o requirements.txt para dentro do container
 COPY requirements.txt .
@@ -59,14 +65,6 @@ COPY . .
 # Retorne o usuário padrão do n8n para segurança
 USER user1002
 
-RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
-    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
-
-
-RUN chown -R node:node /data/linkedin-automacao/output && \
-    chown -R user1002:user1002 /data/linkedin-automacao/output
-
-ENV HOME=/data/linkedin-automacao/tmp_home_1002
 
 # Comando padrão para quando o container é iniciado (pode ser sobrescrito pelo docker-compose)
 # Isso permite que você entre no shell para inspecionar
