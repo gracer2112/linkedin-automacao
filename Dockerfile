@@ -36,15 +36,17 @@ RUN addgroup -g 1002 user1002 && \
     adduser -D -u 1002 -G user1002 -h /data/linkedin-automacao/tmp_home_1002 user1002 
 
 RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
-    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002 && \
-    chown -R node:node /data/linkedin-automacao/tmp_home_1002
+    chown -R node:node /data/linkedin-automacao/tmp_home_1002 && \
+    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
+
 
 # Supondo que você crie o diretório de alguma forma
 RUN mkdir -p /data/linkedin-automacao/output && \
-    chown -R user1002:user1002 /data/linkedin-automacao/output && \
-    chown -R node:node /data/linkedin-automacao/output 
+    chown -R node:node /data/linkedin-automacao/output && \
+    chown -R user1002:user1002 /data/linkedin-automacao/output 
 
-RUN chown -R node:node /data/linkedin-automacao
+
+#RUN chown -R node:node /data/linkedin-automacao
 
 #RUN chown -R node:node /data/linkedin-automacao/output && \
 #    chown -R user1002:user1002 /data/linkedin-automacao/output
