@@ -16,36 +16,36 @@ RUN apk update && \
 # Isso é útil se algum script interno da imagem base esperar /bin/sh
 RUN ln -sf /bin/bash /bin/sh
 
-# Criação do user1002 e home
-RUN addgroup -g 1002 user1002 && \
-    adduser -D -u 1002 -G user1002 -h /data/linkedin-automacao/tmp_home_1002 user1002
-
 # Cria virtualenv isolado para dependências Python
 RUN python3 -m venv /opt/venv
 
 # Dá permissão total ao 'user1002' para acessar o ambiente virtual e o diretório de saída 'output'.
 # Isso é crucial, pois o container rodará como 'user1002'.
 RUN chown -R node:node /opt/venv && \
-    chown -R user1002:user1002 /opt/venv
-
-# Supondo que você crie o diretório de alguma forma
-RUN mkdir -p /data/linkedin-automacao/output && \
-    chown -R user1002:user1002 /data/linkedin-automacao/output
-
-RUN chown -R node:node /data/linkedin-automacao
-
-RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
-    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
-
-RUN chown -R node:node /data/linkedin-automacao/output && \
-    chown -R user1002:user1002 /data/linkedin-automacao/output
+    chown -R 1002:1002 /opt/venv   
 
 # Copia o requirements.txt para dentro do container
 COPY requirements.txt .
 
-# Use o pip do venv diretamente
+# Instala as dependências Python usando o pip do venv.
+# Agora, o '/opt/venv/bin/pip' deve ser encontrado corretamente.
 RUN /opt/venv/bin/pip install --upgrade pip && \
-    /opt/venv/bin/pip install --break-system-packages -r requirements.txt
+    /opt/venv/bin/pip install --break-system-packages --use-deprecated=legacy-resolver -r requirements.txt# Criação do user1002 e home
+RUN addgroup -g 1002 user1002 && \
+    adduser -D -u 1002 -G user1002 -h /data/linkedin-automacao/tmp_home_1002 user1002 
+
+RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
+    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
+
+# Supondo que você crie o diretório de alguma forma
+RUN mkdir -p /data/linkedin-automacao/output && \
+    chown -R user1002:user1002 /data/linkedin-automacao/output && \
+    chown -R node:node /data/linkedin-automacao/output 
+
+RUN chown -R node:node /data/linkedin-automacao
+
+RUN chown -R node:node /data/linkedin-automacao/output && \
+    chown -R user1002:user1002 /data/linkedin-automacao/output
 
 # Define variáveis de ambiente que são importantes para o Python e para o PATH.
 # Adiciona o diretório 'bin' do venv ao PATH, para que 'python' e 'pip' sejam encontrados.
@@ -53,11 +53,6 @@ ENV HOME=/data/linkedin-automacao/tmp_home_1002
 ENV PATH="/opt/venv/bin:${PATH}"
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-
-# Instala as dependências Python usando o pip do venv.
-# Agora, o '/opt/venv/bin/pip' deve ser encontrado corretamente.
-RUN /opt/venv/bin/pip install --upgrade pip && \
-    /opt/venv/bin/pip install --break-system-packages --use-deprecated=legacy-resolver -r requirements.txt
 
 # Copia o restante dos arquivos da sua aplicação para o container.
 COPY . .
