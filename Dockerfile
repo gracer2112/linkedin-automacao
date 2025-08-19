@@ -21,8 +21,7 @@ RUN python3 -m venv /opt/venv
 
 # Dá permissão total ao 'user1002' para acessar o ambiente virtual e o diretório de saída 'output'.
 # Isso é crucial, pois o container rodará como 'user1002'.
-RUN chown -R node:node /opt/venv && \
-    chown -R 1002:1002 /opt/venv   
+RUN chown -R 1002:1002 /opt/venv   
 
 # Copia o requirements.txt para dentro do container
 COPY requirements.txt .
@@ -36,13 +35,11 @@ RUN addgroup -g 1002 user1002 && \
     adduser -D -u 1002 -G user1002 -h /data/linkedin-automacao/tmp_home_1002 user1002 
 
 RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
-    chown -R node:node /data/linkedin-automacao/tmp_home_1002 && \
     chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
 
 
 # Supondo que você crie o diretório de alguma forma
 RUN mkdir -p /data/linkedin-automacao/output && \
-    chown -R node:node /data/linkedin-automacao/output && \
     chown -R user1002:user1002 /data/linkedin-automacao/output 
 
 
