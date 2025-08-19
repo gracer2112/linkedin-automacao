@@ -58,6 +58,7 @@ ENV PYTHONUNBUFFERED=1
 # Copia o restante dos arquivos da sua aplicação para o container.
 COPY . .
 
+RUN chown -R user1002:user1002 /data/linkedin-automacao
 # Retorne o usuário padrão do n8n para segurança
 USER user1002
 
