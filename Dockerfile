@@ -31,11 +31,13 @@ COPY requirements.txt .
 # Agora, o '/opt/venv/bin/pip' deve ser encontrado corretamente.
 RUN /opt/venv/bin/pip install --upgrade pip && \
     /opt/venv/bin/pip install --break-system-packages --use-deprecated=legacy-resolver -r requirements.txt# Criação do user1002 e home
+
 RUN addgroup -g 1002 user1002 && \
     adduser -D -u 1002 -G user1002 -h /data/linkedin-automacao/tmp_home_1002 user1002 
 
 RUN mkdir -p /data/linkedin-automacao/tmp_home_1002 && \
-    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002
+    chown -R user1002:user1002 /data/linkedin-automacao/tmp_home_1002 && \
+    chown -R node:node /data/linkedin-automacao/tmp_home_1002
 
 # Supondo que você crie o diretório de alguma forma
 RUN mkdir -p /data/linkedin-automacao/output && \
@@ -44,8 +46,8 @@ RUN mkdir -p /data/linkedin-automacao/output && \
 
 RUN chown -R node:node /data/linkedin-automacao
 
-RUN chown -R node:node /data/linkedin-automacao/output && \
-    chown -R user1002:user1002 /data/linkedin-automacao/output
+#RUN chown -R node:node /data/linkedin-automacao/output && \
+#    chown -R user1002:user1002 /data/linkedin-automacao/output
 
 # Define variáveis de ambiente que são importantes para o Python e para o PATH.
 # Adiciona o diretório 'bin' do venv ao PATH, para que 'python' e 'pip' sejam encontrados.
